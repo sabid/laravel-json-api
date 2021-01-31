@@ -48,4 +48,5 @@ Route::group([
 
 JsonApi::register('default')->routes(function ($api) {
     $api->resource('users');
+    $api->resource('products');
 });
