@@ -19,9 +19,11 @@ Route::group([
     'as' => 'api.',
     'namespace' => 'Api\V1',
 ], function () {
-    
+
     // Login
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    // Register
+    Route::post('register', [AuthController::class, 'register'])->name('register');
 
     // Protect the router, to be access only with a valid token
     Route::middleware('auth:api')->group(function () {
@@ -29,7 +31,7 @@ Route::group([
         // Get the user info
         Route::post('/user', function (Request $request) {
             return $request->user();
-        });
+        })->name('user');
     });
 
 });
