@@ -1,5 +1,6 @@
 <?php
 
+use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -18,7 +19,7 @@ use App\Http\Controllers\Api\V1\ResetPasswordController;
 */
 // Add version and folder organization to the API
 Route::group([
-    'prefix' => 'v1',
+    'prefix' => 'api/v1',
     'as' => 'api.',
     /* 'namespace' => 'Api\V1', */
 ], function () {
@@ -36,9 +37,15 @@ Route::group([
     Route::middleware('auth:api')->group(function () {
 
         // Get the user info
+        /*
         Route::post('/user', function (Request $request) {
             return $request->user();
         })->name('user');
+        */
     });
 
+});
+
+JsonApi::register('default')->routes(function ($api) {
+    $api->resource('users');
 });
