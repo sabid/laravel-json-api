@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\ResetPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,13 +20,17 @@ use App\Http\Controllers\Api\V1\AuthController;
 Route::group([
     'prefix' => 'v1',
     'as' => 'api.',
-    'namespace' => 'Api\V1',
+    /* 'namespace' => 'Api\V1', */
 ], function () {
 
     // Login
     Route::post('login', [AuthController::class, 'login'])->name('login');
     // Register
     Route::post('register', [AuthController::class, 'register'])->name('register');
+    // Forgot Password, send email to the user
+    Route::post('forgot-password', ForgotPasswordController::class)->name('password.email');
+    // Reset Password
+    Route::post('reset-password', ResetPasswordController::class)->name('reset.password');
 
     // Protect the router, to be access only with a valid token
     Route::middleware('auth:api')->group(function () {
