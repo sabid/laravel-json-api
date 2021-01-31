@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +21,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'phone',
+        'username',
+        'birthday',
         'email',
         'password',
     ];
@@ -39,5 +45,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birthday' => 'date',
     ];
+
+    /**
+     * @param $password
+     */
+    public function setPasswordAttribute($password): void
+    {
+        // If password was accidentally passed in already hashed, try not to double hash it
+        $this->attributes['password'] =
+            (strlen($password) === 60 && preg_match('/^\$2y\$/', $password)) ||
+            (strlen($password) === 95 && preg_match('/^\$argon2i\$/', $password)) ?
+                $password :
+                Hash::make($password);
+    }
 }
