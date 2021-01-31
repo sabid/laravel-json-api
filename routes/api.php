@@ -33,20 +33,14 @@ Route::group([
     // Reset Password
     Route::post('reset-password', ResetPasswordController::class)->name('reset.password');
 
-    // Protect the router, to be access only with a valid token
-    Route::middleware('auth:api')->group(function () {
-
-        // Get the user info
-        /*
-        Route::post('/user', function (Request $request) {
-            return $request->user();
-        })->name('user');
-        */
-    });
-
 });
 
-JsonApi::register('default')->routes(function ($api) {
-    $api->resource('users');
-    $api->resource('products');
+// Protect the router, to be access only with a valid token
+Route::middleware('auth:api')->group(function () {
+
+    JsonApi::register('default')->routes(function ($api) {
+        $api->resource('users');
+        $api->resource('products');
+    });
+
 });
