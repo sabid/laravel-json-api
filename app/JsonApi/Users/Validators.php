@@ -11,11 +11,6 @@ class Validators extends AbstractValidators
 {
     protected $allowedPagingParameters = ['number', 'size'];
 
-    protected $queryRules = [
-        'page.number' => 'filled|numeric|min:1',
-        'page.size' => 'filled|numeric|between:1,100',
-    ];
-
     /**
      * The include paths a client is allowed to request.
      *
@@ -30,7 +25,10 @@ class Validators extends AbstractValidators
      * @var string[]|null
      *      the allowed fields, an empty array for none allowed, or null to allow all fields.
      */
-    protected $allowedSortParameters = [];
+    protected $allowedSortParameters = [
+        'id',
+        'name'
+    ];
 
     /**
      * The filters a client is allowed send.
@@ -57,18 +55,38 @@ class Validators extends AbstractValidators
      */
     protected function rules($record, array $data): array
     {
+        /*
+         * Validate, username and email to be unique
+         * $record is null for a POST request, and is the model for a PATCH.
+         */
         return [
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:8'],
-            'username' => ['required', Rule::unique(User::class)],
+            'username' =>
+                $record ?
+                    [
+                        'required',
+                        Rule::unique(User::class)->ignore($record->id)
+                    ]
+                    :
+                    [
+                        'required',
+                        Rule::unique(User::class)
+                    ]
+            ,
             'birthday' => ['required', 'date'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique(User::class),
-            ],
+            'email' =>
+                $record ?
+                    [
+                        'required', 'string', 'email', 'max:255',
+                        Rule::unique(User::class)->ignore($record->id),
+                    ]
+                    :
+                    [
+                       'required', 'string', 'email', 'max:255',
+                        Rule::unique(User::class),
+                    ]
+            ,
             'password' => ['required', 'min:8'],
         ];
     }
@@ -81,7 +99,11 @@ class Validators extends AbstractValidators
     protected function queryRules(): array
     {
         return [
-            //
+            'filter.name' => 'string|min:1',
+            'filter.phone' => 'string|min:1',
+            'filter.username' => 'string|min:1',
+            'page.number' => 'filled|numeric|min:1',
+            'page.size' => 'filled|numeric|between:1,100',
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\JsonApi\Users;
 
+use App\Models\User;
 use CloudCreativity\LaravelJsonApi\Eloquent\AbstractAdapter;
 use CloudCreativity\LaravelJsonApi\Pagination\StandardStrategy;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,6 +10,20 @@ use Illuminate\Support\Collection;
 
 class Adapter extends AbstractAdapter
 {
+
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'birthday',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $defaultPagination = [
+        //'number' => 1,
+    ];
 
     /**
      * Mapping of JSON API attribute field names to model keys.
@@ -31,7 +46,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new \App\Models\User(), $paging);
+        parent::__construct(new User(), $paging);
     }
 
     /**
@@ -44,11 +59,19 @@ class Adapter extends AbstractAdapter
         // $this->filterWithScopes($query, $filters);
 
         if ($name = $filters->get('name')) {
-            $query->where('users.name', 'LIKE', "%{$name}%");
+            $query->where('users.name', 'like', "%{$name}%");
         }
 
         if ($username = $filters->get('username')) {
-            $query->where('users.username', 'LIKE', "%{$username}%");
+            $query->where('users.username', 'like', "%{$username}%");
+        }
+
+        if ($email = $filters->get('email')) {
+            $query->where('users.email', 'like', "%{$email}%");
+        }
+
+        if ($phone = $filters->get('phone')) {
+            $query->where('users.phone', 'like', "%{$phone}%");
         }
     }
 
