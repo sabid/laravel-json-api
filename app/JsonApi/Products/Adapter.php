@@ -2,6 +2,7 @@
 
 namespace App\JsonApi\Products;
 
+use App\Models\Products;
 use CloudCreativity\LaravelJsonApi\Eloquent\AbstractAdapter;
 use CloudCreativity\LaravelJsonApi\Pagination\StandardStrategy;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,7 +32,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new \App\Models\Products(), $paging);
+        parent::__construct(new Products(), $paging);
     }
 
     /**
@@ -44,11 +45,11 @@ class Adapter extends AbstractAdapter
         // $this->filterWithScopes($query, $filters);
 
         if ($sku = $filters->get('sku')) {
-            $query->where('products.sku', 'LIKE', "%{$sku}%");
+            $query->where('products.sku', 'like', "%{$sku}%");
         }
 
         if ($name = $filters->get('name')) {
-            $query->where('products.name', 'LIKE', "%{$name}%");
+            $query->where('products.name', 'like', "%{$name}%");
         }
     }
 

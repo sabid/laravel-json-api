@@ -60,7 +60,11 @@ class Validators extends AbstractValidators
     protected function queryRules(): array
     {
         return [
-            //
+            'filter.name' => 'string|min:1',
+            'filter.quantity' => 'string|min:1',
+            'filter.price' => 'string|min:1',
+            'page.number' => 'filled|numeric|min:1',
+            'page.size' => 'filled|numeric|between:1,100',
         ];
     }
 
