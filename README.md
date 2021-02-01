@@ -101,7 +101,7 @@ El proyecto en Postman, tiene configurado dos entornos
 
 * `token` = El token se obtendrá automáticamente, cada vez que inicie sesión y se utilizará en todas las peticiones del CRUD de Usuarios y el CRUD de productos 
 
-![Entorno Producción](https://laravel-api-rest.negociosonline.net/doc/entorno-local.png)
+![Entorno Local](https://laravel-api-rest.negociosonline.net/doc/entorno-local.png)
 
 ### Producción 
 
